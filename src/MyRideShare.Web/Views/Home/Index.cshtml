@@ -3,6 +3,24 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to My Ride Share</h1>
+    <h4>You current ride's routing status is:</h4>
+    
+    <ul id="status"></ul>
 </div>
+
+<script>
+    const eventSource = new EventSource('/ride-status');
+    const statusList = document.getElementById('status');
+
+    eventSource.addEventListener('ride-status', event => {
+        const li = document.createElement('li');
+        li.textContent = event.data;
+        statusList.appendChild(li);
+    });
+
+    eventSource.onerror = error => {
+        console.error('EventSource failed for ride status:', error);
+        eventSource.close();
+    };
+</script>
