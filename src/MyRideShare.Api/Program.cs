@@ -10,6 +10,16 @@ builder.Services.AddHostedService<RideShareBackgroundWorker>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Default",
+        b => b.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+    );
+});
+
 var app = builder.Build();
 
 app.MapGet("/ride-status", (RideStatusService rideStatusService, CancellationToken cancellationToken) => 
@@ -24,5 +34,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("Default");
 
 app.Run();
